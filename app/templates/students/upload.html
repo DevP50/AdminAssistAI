@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload</title>
+</head>
+<body>
+  <h1>Upload Student & Fee Records</h1>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      {% if category == 'success' %}
+        <p style="color: green;">{{ message }}</p>
+      {% else %}
+        <p style="color: red;">{{ message }}</p>
+      {% endif %}
+    {% endfor %}
+  {% endwith %}
+  <form action="{{ url_for('students.handle_upload') }}" method="POST" enctype="multipart/form-data">
+   <div class="upload-box">
+    <label for="file">Choose Excel file:
+     <p class="icon"></p>
+     <p class="text">Drag and drop your file here or click to select</p>
+     <p class="note">Only .xlsx and .xls files are accepted.</p>
+     <input type="file" name="file" accept=".xlsx,.xls" id="file" required>
+    </label>
+  </div>
+       <button type="submit" class="btn-submit">Upload</button>
+  </form><!---File upload section-->
+</body>
+<style>
+    .upload-box {
+    max-width: 400px;
+    margin: 50px auto;
+   }
+
+  .uploaded-box label{
+    display: flex;
+    flex-direction: row;
+    align-items:center;
+    justify-content: center;
+
+    height: 250px;
+    border: 2px dashed #4a90e2;
+    border-radius: 10px;
+    background-color: #f9fbfd;
+    cursor: pointer;
+   }
+
+   .btn-submit{
+     display: block;
+     border-radius: 5px;
+     background-color:#4a90e2;
+     color:white;
+     transition: background-color 0.2 ease
+   }
+
+   .btn-submit:hover{
+    background-color: blue;
+   }
+   body{
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+   }
+   .text{
+    font-size: 16px;
+    color: #212529;
+   }
+   .note{
+    font-size: 14px;
+    color: #6c757d;
+   }
+</style>
+</html>

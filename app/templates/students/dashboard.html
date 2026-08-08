@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Student Fee Dashboard</h1>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          {% if category == 'success' %}
+            <p style="color: green;">{{ message }}</p>
+          {% else %}
+            <p style="color: red;">{{ message }}</p>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  <h2>{{unpaid_count}} payment(s) need follow-up</h2>
+  <table border="1" cellpadding="6">
+    <tr>
+      <th>Name</th>
+      <th>Class</th>
+      <th>Term</th>
+      <th>Fee</th>
+      <th>Paid</th>
+      <th>Status</th>
+    </tr>
+    {% for student in students %}
+      {% for payment in student.payments %}
+        {# determine row background color based on status #}
+        {% if payment.status.value == 'PAID' %}
+          {% set row_bg = '#d4edda' %}
+        {% elif payment.status.value == 'PARTIALLY_PAID' %}
+          {% set row_bg = '#fff3cd' %}
+        {% else %}
+          {% set row_bg = '#fde2e2' %}
+        {% endif %}
+        <tr style="background-color: {{ row_bg }};">
+          <td>{{ student.full_name }}</td>
+          <td>{{ student.student_class }}</td>
+          <td>{{ payment.term }}</td>
+          <td>{{ payment.fee_amount }}</td>
+          <td>{{ payment.amount_paid }}</td>
+          <td> {{ payment.status.value }}
+           <form action="{{ url_for('students.update_payment', payment_id=payment.id) }}" method="POST" style="display:inline;">
+            <input type="number" name="amount_paid" value="{{ payment.amount_paid }}" step="1" style="width:80px;">
+            <button type="submit">Update</button>
+          </form>
+          <form action="{{url_for('students.send_reminder',payment_id=payment.id)}}" method="POST" style="display:inline;">
+             {% if payment.status.value == 'PAID' %}
+                <button type="submit" disabled>Generate Reminder</button>
+             {% else %}
+                <button type="submit">Generate Reminder</button>
+             {% endif %}
+          </form>
+         </td>
+        </tr>
+      {% endfor %}
+    {% endfor %}
+  </table>
+</body>
+</html>
