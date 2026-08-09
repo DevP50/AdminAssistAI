@@ -8,6 +8,8 @@ from app.services.ai_reminder_service import generate_reminder_message
 students_bp = Blueprint('students', __name__, url_prefix='/students')
 app_bp = Blueprint('app', __name__, url_prefix='')
 @app_bp.route('/')
+def home():
+    return render_template('welcome.html')
 @students_bp.route('/upload', methods=['GET'])
 def upload_page():
     return render_template('students/upload.html')

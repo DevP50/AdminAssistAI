@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AdminAssist — Fee tracking, automated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink-900: #16213e;
+    --ink-700: #223159;
+    --ink-600: #2c3f70;
+    --paper-100: #f7f3e9;
+    --paper-200: #efe8d8;
+    --gold-500: #c9a227;
+    --gold-600: #a8841c;
+    --rust-500: #a63d2d;
+    --sage-500: #5f8a68;
+    --text-on-ink: #f2eee0;
+    --text-muted-on-ink: #b9c0d6;
+    --radius: 14px;
+  }
+
+  * { 
+    box-sizing: border-box;
+   }/*Applying border-box to all elements so that they do not exceed the width of the original container*/
+
+
+  
+  body {
+    margin: 0;
+    background: var(--ink-900);
+    color: var(--text-on-ink);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+     max-width: 1080px;
+      margin: 0 auto; 
+      padding: 0 28px;
+     }
+
+  h1, h2, h3 { 
+    font-family: 'Roboto Slab', serif; margin: 0;
+    color: var(--text-on-ink);
+  }
+
+  .mono { 
+    font-family: 'Georgian', serif; letter-spacing: 0.02em; 
+  }
+
+  /* ---------- NAV ---------- */
+  nav.wrap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 26px;
+    padding-bottom: 26px;
+  }
+  .brand { 
+    display: flex; align-items: center; gap: 12px; font-family: 'Roboto Slab', serif; font-weight: 700; font-size: 19px;
+   }/*Display flex is a css layout  that is used  to arrange flex items in a row or column depending on   the flex-direction property. It allows for flexible and responsive layouts by distributing space among items and aligning them within a container.*/
+  .brand .mark {
+    width: 28px; 
+    height: 28px;
+     border-radius: 8px;
+    background: var(--gold-500);
+     color: var(--ink-900);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-family: 'IBM Plex Mono', monospace; font-weight: 700; font-size: 15px;
+  }
+  .nav-cta {
+    color: var(--ink-900); background: var(--gold-500);
+    padding: 10px 20px; 
+    border-radius: 999px; 
+    text-decoration: none;
+    font-weight: 600; 
+    font-size: 14px;
+     transition: background 0.15s ease;
+  }
+  .nav-cta:hover { 
+    background: var(--gold-600); 
+  }
+  .nav-cta:focus-visible { 
+    outline: 2px solid var(--paper-100); 
+    outline-offset: 2px; 
+  }
+
+  /* ---------- HERO ---------- */
+  .hero {
+    padding: 56px 0 88px;
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items: center;
+  }
+  .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-500);
+    margin-bottom: 18px;
+    display: block;
+  }
+  .hero h1 {
+    font-size: 46px;
+    line-height: 1.12;
+    font-weight: 700;
+    color: var(--text-on-ink);
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold-500);
+  }
+  .hero p.lede {
+    margin: 22px 0 32px;
+    font-size: 17px;
+    line-height: 1.65;
+    color: var(--text-muted-on-ink);
+    max-width: 46ch;
+  }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }/*Flex wrap ensure that the flex items are pushed onto the 
+  next line if they exceed the width of the container, preventing overflow and maintaining a clean layout.*/
+  .btn-primary {
+    background: var(--gold-500); color: var(--ink-900);
+    padding: 14px 26px; border-radius: 999px; text-decoration: none;
+    font-weight: 600; font-size: 15px; transition: background 0.15s ease, transform 0.15s ease;
+  }
+  .btn-primary:hover { background: var(--gold-600); transform: translateY(-1px); }
+  .btn-primary:focus-visible { 
+    outline: 2px solid var(--paper-100); 
+    outline-offset: 3px; 
+  }
+  .btn-ghost {
+    color: var(--text-on-ink); padding: 14px 22px; border-radius: 999px;
+    text-decoration: none; font-weight: 500; font-size: 15px;
+    border: 1px solid rgba(242,238,224,0.28);
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+  .btn-ghost:hover { 
+    border-color: rgba(242,238,224,0.6); 
+    background: rgba(242,238,224,0.05); 
+  }
+  .btn-ghost:focus-visible { 
+    outline: 2px solid var(--paper-100); outline-offset: 3px; 
+  }
+
+  /* ---------- LEDGER CARD (hero visual) ---------- */
+  .ledger-card {
+    position: relative;
+    background: var(--paper-100);
+    border-radius: var(--radius);
+    padding: 22px 20px 26px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.5);
+    transform: rotate(-1.2deg);
+  }
+  .ledger-card .card-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink-700); margin-bottom: 14px; display: block;
+  }
+  .ledger-row {
+    display: grid;
+    grid-template-columns: 1fr 70px 84px;
+    align-items: center;
+    padding: 11px 4px;
+    border-top: 1px solid var(--paper-200);
+    font-size: 13px;
+    color: var(--ink-900);
+  }
+  .ledger-row:first-of-type { 
+    border-top: none; 
+  }
+  .ledger-row .amt { 
+    font-family: 'IBM Plex Mono', monospace; 
+    text-align: right; 
+    color: var(--ink-700); 
+  }
+  .pill {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px; 
+    font-weight: 500; 
+    text-align: center;
+    padding: 4px 8px; 
+    border-radius: 999px; 
+    letter-spacing: 0.03em;
+  }
+  .pill.paid { 
+    background: rgba(95,138,104,0.16); 
+    color: var(--sage-500); 
+  }
+  .pill.partial { 
+    background: rgba(201,162,39,0.18); 
+    color: var(--gold-600); 
+  }
+  .pill.unpaid { 
+    background: rgba(166,61,45,0.14); 
+    color: var(--rust-500); 
+  }
+
+  .stamp {
+    position: absolute;
+    top: -22px; right: -18px;
+    width: 108px; height: 108px;
+    border: 3px solid var(--rust-500);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transform: rotate(11deg);
+    color: var(--rust-500);
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700; font-size: 13px; letter-spacing: 0.05em;
+    text-align: center; line-height: 1.3;
+    background: rgba(166,61,45,0.04);
+  }
+
+  /* ---------- WORKFLOW ---------- */
+  .workflow { 
+    padding: 40px 0 88px;
+   }
+  .workflow-head { 
+    max-width: var(--radius); 
+    margin-bottom: 46px; 
+  }
+  .workflow-head .eyebrow {
+     margin-bottom: 14px;
+   }
+  .workflow-head h2 {
+     font-size: 30px;
+      color: var(--text-on-ink); 
+      line-height: 1.25;
+     }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(242,238,224,0.16);
+  }
+  .step {
+    padding: 30px 26px 30px 0;
+    border-right: 1px solid rgba(242,238,224,0.16);
+  }
+  
+  .step-no {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; color: var(--gold-500); margin-bottom: 14px; display: block;
+  }
+  .step h3 { 
+    font-size: 18px; 
+    color: var(--text-on-ink);
+     margin-bottom: 10px; 
+    }
+  .step p { 
+    margin: 0; 
+    font-size: 14px; 
+    line-height: 1.6; 
+    color: var(--text-muted-on-ink); 
+  }
+
+  /* ---------- CLOSING CTA ---------- */
+  .closing {
+    padding: 64px 0 80px;
+    border-top: 2px solid rgba(242,238,224,0.16);
+    text-align: center;
+  }
+  .closing h2 { 
+    font-size: 28px; 
+    color: var(--text-on-ink); 
+    margin-bottom: 16px; 
+  }
+  .closing p { 
+    color: var(--text-muted-on-ink); 
+    margin: 0 0 30px; 
+    font-size: 15px; 
+  }
+
+  footer.wrap {
+    padding: 26px 0 40px;
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    font-size: 12.5px; 
+    color: var(--text-muted-on-ink);
+    border-top: 1px solid rgba(242,238,224,0.1);
+  }
+
+  @media (max-width: 860px) {
+    .hero {
+       grid-template-columns: 1fr; 
+       gap: 35px; 
+       padding-top: 20px; 
+      }
+    .hero h1 { 
+      font-size: 34px; 
+    }
+    .steps { 
+      grid-template-columns: 1fr; 
+    }
+    .step { 
+      border-right: none; 
+      border-bottom: 1px solid rgba(242,238,224,0.16); 
+      padding: 24px 0; 
+    }
+    .step:first-child {
+       padding-top: 0; 
+      }
+    .stamp {
+       width: 84px;
+        height: 84px; 
+        font-size: 11px; 
+        top: -16px; 
+        right: -10px; 
+      }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { 
+      scroll-behavior: auto; 
+    }
+    * { 
+      transition: none !important; 
+    }
+  }
+</style>
+</head>
+<body>
+
+  <nav class="wrap">
+    <div class="brand"><span class="mark">A</span>AdminAssist</div>
+    <a class="nav-cta" href="/students/upload">Open dashboard</a>
+  </nav>
+
+  <header class="hero wrap">
+    <div>
+      <span class="eyebrow">School fee administration</span>
+      <h1>Every unpaid fee, <em>found</em>, not chased.</h1>
+      <p class="lede">
+        Upload the spreadsheet you already keep. AdminAssist turns it into a live
+        dashboard of who's paid, who's behind, and a personalized reminder ready
+        to send — in the time it used to take to open the file.
+      </p>
+      <div class="hero-ctas">
+        <a class="btn-primary" href="/students/upload">Upload a spreadsheet</a>
+        <a class="btn-ghost" href="#workflow">See how it works</a>
+      </div>
+    </div>
+
+    <div class="ledger-card">
+      <div class="stamp">FOLLOW<br>UP<br>NOW</div>
+      <span class="card-title">Term 2 · Fee Register</span>
+      <div class="ledger-row">
+        <span>Chidinma Obi</span>
+        <span class="amt">40,000</span>
+        <span class="pill paid">PAID</span>
+      </div>
+      <div class="ledger-row">
+        <span>Tunde Bakare</span>
+        <span class="amt">20,000</span>
+        <span class="pill partial">PARTIAL</span>
+      </div>
+      <div class="ledger-row">
+        <span>Ifeoma Chukwu</span>
+        <span class="amt">0</span>
+        <span class="pill unpaid">UNPAID</span>
+      </div>
+      <div class="ledger-row">
+        <span>Segun Adeyemi</span>
+        <span class="amt">38,000</span>
+        <span class="pill paid">PAID</span>
+      </div>
+    </div>
+  </header>
+
+  <section class="workflow wrap" id="workflow">
+    <div class="workflow-head">
+      <span class="eyebrow">The three steps</span>
+      <h2>From spreadsheet to sent reminder, without re-typing a single number.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <span class="step-no mono">Entry No. 01</span>
+        <h3>Upload</h3>
+        <p>Drop in the Excel file your school already uses. No new format, no manual re-entry.</p>
+      </div>
+      <div class="step">
+        <span class="step-no mono">Entry No. 02</span>
+        <h3>Track</h3>
+        <p>A color-coded dashboard shows paid, partial, and unpaid at a glance — updated the moment a payment is recorded.</p>
+      </div>
+      <div class="step">
+        <span class="step-no mono">Entry No. 03</span>
+        <h3>Remind</h3>
+        <p>One click generates a personalized, ready-to-send message for every guardian still owing fees.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="closing wrap">
+    <h2>Your spreadsheet already has the answer.</h2>
+    <p>AdminAssist just makes it visible.</p>
+    <a class="btn-primary" href="/students/upload">Get started</a>
+  </section>
+
+  <footer class="wrap">
+    <span>AdminAssist</span>
+    <span>Built for the Iris Hacks IV Hackathon</span>
+  </footer>
+
+</body>
+</html>
