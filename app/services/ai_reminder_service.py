@@ -2,7 +2,7 @@ from openai import OpenAI
 import os
 client = OpenAI(
     base_url="https://api.featherless.ai/v1",
-  api_key="FEATHERLESS_API_KEY",
+  api_key=os.getenv("FEATHERLESS_API_KEY"),
 )
 def generate_reminder_message(student_name, amount_owed, term):
     prompt = (
