@@ -8,8 +8,10 @@ def create_app():
     app.config.from_object(BaseConfig)
     app.register_blueprint(students_bp , url_prefix='/students')
     app.register_blueprint(app_bp , url_prefix='/')
+
     db.init_app(app)
-    from app.models.model import Student, Payment
-    db.create_all()
+    with app.app_context(): 
+     from app.models.model import Student, Payment
+     db.create_all()
     return app
 
