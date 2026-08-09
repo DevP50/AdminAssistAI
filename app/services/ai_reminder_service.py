@@ -1,10 +1,9 @@
 from openai import OpenAI
 import os
 client = OpenAI(
-    base_url="https://openrouter.ai/api/v1",
-    api_key=os.getenv("OPENROUTER_API_KEY"),
+    base_url="https://api.featherless.ai/v1",
+  api_key="FEATHERLESS_API_KEY",
 )
-
 def generate_reminder_message(student_name, amount_owed, term):
     prompt = (
         f"""Write a short, polite fee reminder message (2-3 sentences) for a school 
@@ -15,8 +14,8 @@ def generate_reminder_message(student_name, amount_owed, term):
     )
 
     response = client.chat.completions.create(
-        model="openai/gpt-4o-mini",
+        model="Qwen/Qwen2.5-7B-Instruct",
         messages=[{"role": "user", "content": prompt}],
-        max_tokens=150,#Maximum amount of tokens to be used when generating the response
+        
     )
     return response.choices[0].message.content.strip()
