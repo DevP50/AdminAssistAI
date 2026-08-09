@@ -7,7 +7,7 @@ class BaseConfig:
     if SECRET_KEY is None:
         raise ValueError("SECRET KEY VALUE REQUIRED FOR STARTUP!")
     
-    if OPEN_ROUTER_API_KEY := os.getenv('OPENROUTER_API_KEY') is None:
+    if OPENROUTER_API_KEY := os.getenv('OPENROUTER_API_KEY') is None:
         raise ValueError("OPENROUTER_API_KEY VALUE REQUIRED FOR STARTUP!")
 
     SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
