@@ -10,5 +10,6 @@ def create_app():
     app.register_blueprint(app_bp , url_prefix='/')
     db.init_app(app)
     from app.models.model import Student, Payment
+    db.create_all()
     return app
 
